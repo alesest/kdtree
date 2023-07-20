@@ -1,6 +1,6 @@
-package it.alessandrosestito.kdtree.impl;
+package com.alessandrosestito.kdtree.impl;
 
-import it.alessandrosestito.kdtree.KDTree;
+import com.alessandrosestito.kdtree.KDTree;
 import lombok.RequiredArgsConstructor;
 
 import java.time.Duration;

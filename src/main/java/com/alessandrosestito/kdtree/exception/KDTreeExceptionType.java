@@ -1,4 +1,4 @@
-package it.alessandrosestito.kdtree.exception;
+package com.alessandrosestito.kdtree.exception;
 
 public enum KDTreeExceptionType {
     KEY_IS_NULL,
@@ -9,5 +9,4 @@ public enum KDTreeExceptionType {
     FIELD_NOT_COMPARABLE,
     FIELD_NOT_IMMUTABLE,
     DUPLICATE_KEY
-
 }

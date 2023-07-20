@@ -1,9 +1,9 @@
-package it.alessandrosestito.kdtree;
+package com.alessandrosestito.kdtree;
 
-import it.alessandrosestito.kdtree.impl.KDTreeBuilder;
-import it.alessandrosestito.kdtree.impl.KDTreeKey;
-import it.alessandrosestito.kdtree.impl.KDTreeQuery;
-import it.alessandrosestito.kdtree.impl.KDTreeQueryBuilder;
+import com.alessandrosestito.kdtree.impl.KDTreeBuilder;
+import com.alessandrosestito.kdtree.impl.KDTreeKey;
+import com.alessandrosestito.kdtree.impl.KDTreeQuery;
+import com.alessandrosestito.kdtree.impl.KDTreeQueryBuilder;
 
 import java.util.List;
 import java.util.Map;

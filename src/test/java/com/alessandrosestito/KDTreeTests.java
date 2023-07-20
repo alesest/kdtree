@@ -1,11 +1,11 @@
-package it.alessandrosestito;
+package com.alessandrosestito;
 
 
-import it.alessandrosestito.kdtree.KDTree;
-import it.alessandrosestito.kdtree.SkipKDTreeIndex;
-import it.alessandrosestito.kdtree.exception.KDTreeExceptionType;
-import it.alessandrosestito.kdtree.exception.KDTreeRuntimeException;
-import it.alessandrosestito.kdtree.impl.KDTreeKey;
+import com.alessandrosestito.kdtree.KDTree;
+import com.alessandrosestito.kdtree.SkipKDTreeIndex;
+import com.alessandrosestito.kdtree.exception.KDTreeExceptionType;
+import com.alessandrosestito.kdtree.exception.KDTreeRuntimeException;
+import com.alessandrosestito.kdtree.impl.KDTreeKey;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

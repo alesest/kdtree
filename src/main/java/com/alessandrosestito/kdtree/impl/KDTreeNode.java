@@ -1,4 +1,4 @@
-package it.alessandrosestito.kdtree.impl;
+package com.alessandrosestito.kdtree.impl;
 
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +13,5 @@ public class KDTreeNode<K, V> {
     private V value;
     private KDTreeNode<K, V> left;
     private KDTreeNode<K, V> right;
-    //private Field dimension;
     private int axis;
 }

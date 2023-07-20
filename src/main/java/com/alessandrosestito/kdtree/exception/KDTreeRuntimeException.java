@@ -1,4 +1,4 @@
-package it.alessandrosestito.kdtree.exception;
+package com.alessandrosestito.kdtree.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package it.alessandrosestito.kdtree.impl;
+package com.alessandrosestito.kdtree.impl;
 
 import lombok.Builder;
 import lombok.Getter;

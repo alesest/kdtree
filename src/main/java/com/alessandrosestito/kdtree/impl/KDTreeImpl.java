@@ -1,8 +1,8 @@
-package it.alessandrosestito.kdtree.impl;
+package com.alessandrosestito.kdtree.impl;
 
-import it.alessandrosestito.kdtree.KDTree;
-import it.alessandrosestito.kdtree.exception.KDTreeExceptionType;
-import it.alessandrosestito.kdtree.exception.KDTreeRuntimeException;
+import com.alessandrosestito.kdtree.KDTree;
+import com.alessandrosestito.kdtree.exception.KDTreeExceptionType;
+import com.alessandrosestito.kdtree.exception.KDTreeRuntimeException;
 
 import java.time.Duration;
 import java.util.*;
@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
 public class KDTreeImpl<K extends KDTreeKey, V> implements KDTree<K, V> {
 
     private final Map<Integer, String> features;
-    private KDTreeNode<K, V> root;
-    private long size;
     private final boolean withAutoBalance;
     private final Duration interval;
+    private KDTreeNode<K, V> root;
+    private long size;
     private ReentrantLock autoBalanceLock;
 
 

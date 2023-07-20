@@ -1,8 +1,8 @@
-package it.alessandrosestito.kdtree.impl;
+package com.alessandrosestito.kdtree.impl;
 
-import it.alessandrosestito.kdtree.SkipKDTreeIndex;
-import it.alessandrosestito.kdtree.exception.KDTreeExceptionType;
-import it.alessandrosestito.kdtree.exception.KDTreeRuntimeException;
+import com.alessandrosestito.kdtree.SkipKDTreeIndex;
+import com.alessandrosestito.kdtree.exception.KDTreeExceptionType;
+import com.alessandrosestito.kdtree.exception.KDTreeRuntimeException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
