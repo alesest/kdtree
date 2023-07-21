@@ -27,7 +27,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Alessandro Sestito Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/alessandrosestito/kdtree</url>
+            <url>https://maven.pkg.github.com/alesest/kdtree</url>
         </repository>
     </distributionManagement>
 
