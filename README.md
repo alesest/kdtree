@@ -12,16 +12,16 @@ This library provides a set of out-of-the-box features that allow you to easily 
 This library is available on maven central. Add this dependency to your project:
 ```xml
 <dependency>
-    <groupId>com.alessandrosestito</groupId>
-    <artifactId>kdtree</artifactId>
-    <version>0.0.1</version>
+  <groupId>com.alessandrosestito</groupId>
+  <artifactId>kdtree</artifactId>
+  <version>0.0.1</version>
 </dependency>
 ```
 ## Usage Guide
 Before creating the structure it is necessary to construct the data key, which will therefore contain the set of features that will be indexed. Suppose we want to index a 3-dimensional space:
 
 - Create Key
-```
+```java
     @Data
     @Builder
     @EqualsAndHashCode(callSuper = true)
@@ -35,13 +35,13 @@ Note that the attributes of the key must be immutable (therefore final) and the 
 The values associated with the keys can be of any type, we can create the tree;
 
 - Create KDTree:
-```
+```java
 KDTree<Point3d, String> kdTree = KDTree.of(Point3d.class, String.class).build();
 ```
 The "KDTree.of" method requires the key and value classes, returns a builder in which it is possible to configure a self-balancing strategy (more details in the API documentation) and finally returns the created data structure.
 
 - Insert data:
-```
+```java
 Point3d key = Point3d.builder().x(10).y(10).z(10).build();
 String value = "Hello!";
 kdTree.insert(key, value);
@@ -49,14 +49,14 @@ kdTree.insert(key, value);
 As in a map we can insert a pair <key, value>, if the key is already present an exception will be thrown.
 
 - Delete data:
-```
+```java
 Point3d key1 = Point3d.builder().x(10).y(10).z(10).build();
 kdTree.delete(key1);
 ```
 The Delete method deletes a <key, value> pair if the key exists, a boolean value is returned for this condition.
 
 - Perform query with feature bounds:
-```
+```java
 List<Map.Entry<Point3d, String>> result =  kdTree.query()
                 .featureBounds("x", 0, 10)
                 .featureBounds("y", 10, 20)
@@ -65,7 +65,7 @@ List<Map.Entry<Point3d, String>> result =  kdTree.query()
 ```
 The "**KDTree.query**" method returns a configurable query builder in which we can decide the bounds for each feature or pass it keys directly as bounds, we can also set a match function and an upper limit of results.
 - Perform query with key bounds:
-```
+```java
 List<Map.Entry<Point3d, String>> result2 = kdTree.query()
                 .lowerBound(Point3d.builder().x(0).y(10).z(20).build())
                 .upperBound(Point3d.builder().x(10).y(20).z(30).build())
@@ -73,7 +73,7 @@ List<Map.Entry<Point3d, String>> result2 = kdTree.query()
 ```
 In this case the two outputs will be the same and the two ways are equivalent, you can choose the most suitable one.
 - Perform query with match and limit. Search a maximum of 1000 points within a 3d sphere with origin at point 0,0,0 and radius 1:
-```
+```java
 List<Map.Entry<Point3d, String>> result3 = kdTree.query()
         .lowerBound(Point3d.builder().x(-1).y(-1).z(-1).build())
         .upperBound(Point3d.builder().x(1).y(1).z(1).build())
@@ -97,7 +97,7 @@ The main APIs are exposed through the KDTree interface
   Allows you to create an instance of KDTree. It needs the key and value classes.
     - it is possible to add the **withAutoBalance(Duration interval)** option which, with the frequency defined in the interval, schedules a job to automatically balance the tree to improve performance.
     - using **withAutoBalanceScoreThreshold(double threshold)** it is possible to define a threshold value for the tree score above which balancing is not done. The range of the value is [0, 1], 1 perfectly balanced, 0 the tree has degenerated into a list. The default the threshold value is 0.75.
-```
+```java
 KDTree<Key, Value> kdTree = KDTree.of(Key.class, Value.class)
                 .withAutoBalance(Duration.of(10, ChronoUnit.SECONDS))
                 .withAutoBalanceScoreThreshold(0.95)
@@ -105,12 +105,12 @@ KDTree<Key, Value> kdTree = KDTree.of(Key.class, Value.class)
 ```
 - **insert** :
   Inserts a new <key, value> pair into the structure. All fields indexed in the key must be non-null. If the key is already present, an exception is thrown.
-```
+```java
 kdTree.insert(key, value);
 ```
 - **delete** :
   Delete a new <key, value> pair in the structure starting from the key. A Boolean is returned indicating whether the item was deleted.
-```
+```java
 boolean deleted = kdTree.delete(key);
 ```
 - **query** :
@@ -119,7 +119,7 @@ boolean deleted = kdTree.delete(key);
     - apply a filter to the points delimited by bounds
     - limit the number of results
     - launch the query
-```
+```java
 List<Map.Entry<Point3d, String>> result = kdTree.query()
         .featureBounds("x", 0, 10)
         .featureBounds("y", 10, 20)
@@ -129,7 +129,7 @@ List<Map.Entry<Point3d, String>> result = kdTree.query()
         .execute();
 ```
 or
-```
+```java
 List<Map.Entry<Point3d, String>> result = kdTree.query()
         .lowerBound(Point3d.builder().x(0).y(10).z(20).build())
         .upperBound(Point3d.builder().x(10).y(20).z(30).build())
@@ -139,29 +139,29 @@ List<Map.Entry<Point3d, String>> result = kdTree.query()
 ```
 - **get** :
   Returns the value associated with the key passed as input, if any, otherwise null.
-```
+```java
 Map.Entry<K, V> node = kdTree.get(key);
 ```
 - **containsKey** :
   Returns true if the value associated with the key passed as input, is present.
-```
+```java
 boolean exists = kdTree.containsKey(key);
 ```
 - **size** :
   Returns the number of elements in the structure.
-```
+```java
 long size = kdTree.size();
 ```
 - **score** :
   Returns a value between 0 and 1.
     - 1 means that the tree is perfectly balanced.
     - 0 means that the tree is degenerated into a list. in these cases a rebalancing is necessary.
-```
+```java
 double score = kdTree.score();
 ```
 - **balance** :
   Rearrange the structure of the tree in such a way that it is balanced as possible.
-```
+```java
 kdTree.balance();
 ```
 ## Performance
