@@ -158,14 +158,13 @@ public class KDTreeTests {
 
         pointsToDelete.forEach(point3dIndex -> {
             boolean deleted = kdTree.delete(point3dIndex);
-            if (!deleted) {
-                System.out.println();
-            }
             assertTrue(deleted);
             lastDeleted.set(point3dIndex);
         });
 
-        assertFalse(kdTree.delete(lastDeleted.get()));
+        if (lastDeleted.get() != null) {
+            assertFalse(kdTree.delete(lastDeleted.get()));
+        }
         Assert.assertEquals(kdTree.size(), fullScanCount());
         Assert.assertEquals(kdTree.size(), sampleNo - pointsToDelete.size());
         sampleNo = kdTree.size();

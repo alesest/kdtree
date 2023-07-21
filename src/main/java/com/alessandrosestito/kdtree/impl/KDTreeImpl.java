@@ -68,6 +68,9 @@ public class KDTreeImpl<K extends KDTreeKey, V> implements KDTree<K, V> {
         if (root == null) {
             throw new KDTreeRuntimeException(KDTreeExceptionType.KEY_NOT_EXISTS, "cannot delete node");
         }
+        if (key == null) {
+            throw new KDTreeRuntimeException(KDTreeExceptionType.KEY_IS_NULL, "key cannot be null");
+        }
         Runnable unlock = autoBalanceLock();
 
         AtomicBoolean isDeleted = new AtomicBoolean(false);
