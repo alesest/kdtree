@@ -24,7 +24,7 @@ Before creating the structure it is necessary to construct the data key, which w
 ```java
     @Data
     @Builder
-    @EqualsAndHashCode(callSuper = true)
+    @EqualsAndHashCode(callSuper = false)
     static class Point3d extends KDTreeKey {
         private final Integer x;
         private final Integer y;
