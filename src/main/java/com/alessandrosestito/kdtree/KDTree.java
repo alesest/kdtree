@@ -16,7 +16,7 @@ public interface KDTree<K extends KDTreeKey, V> {
 
     void insert(K key, V value);
 
-    void delete(K key);
+    boolean delete(K key);
 
     KDTreeQueryBuilder<K, V> query();
 

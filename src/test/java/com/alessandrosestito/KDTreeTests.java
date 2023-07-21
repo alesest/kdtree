@@ -17,12 +17,12 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class KDTreeTests {
 
@@ -154,8 +154,18 @@ public class KDTreeTests {
                 .filter(point3dIndex -> point3dIndex.getX() < Integer.MIN_VALUE + Integer.MAX_VALUE / 4)
                 .collect(Collectors.toList());
 
-        pointsToDelete.forEach(kdTree::delete);
+        AtomicReference<Point3dIndex> lastDeleted = new AtomicReference<>();
 
+        pointsToDelete.forEach(point3dIndex -> {
+            boolean deleted = kdTree.delete(point3dIndex);
+            if (!deleted) {
+                System.out.println();
+            }
+            assertTrue(deleted);
+            lastDeleted.set(point3dIndex);
+        });
+
+        assertFalse(kdTree.delete(lastDeleted.get()));
         Assert.assertEquals(kdTree.size(), fullScanCount());
         Assert.assertEquals(kdTree.size(), sampleNo - pointsToDelete.size());
         sampleNo = kdTree.size();

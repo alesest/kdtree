@@ -8,6 +8,7 @@ import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -16,19 +17,21 @@ public class KDTreeImpl<K extends KDTreeKey, V> implements KDTree<K, V> {
 
     private final Map<Integer, String> features;
     private final boolean withAutoBalance;
+    private final double autoBalanceScoreThreshold;
     private final Duration interval;
     private KDTreeNode<K, V> root;
     private long size;
     private ReentrantLock autoBalanceLock;
 
 
-    public KDTreeImpl(Class<K> clazz, boolean withAutoBalance, Duration interval) {
+    public KDTreeImpl(Class<K> clazz, boolean withAutoBalance, double autoBalanceScoreThreshold, Duration interval) {
         AtomicInteger ai = new AtomicInteger();
         features = KDTreeUtils.findIndexedFieldScan(clazz).stream()
                 .map(field -> new AbstractMap.SimpleEntry<>(ai.getAndIncrement(), field.getName()))
                 .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
         this.withAutoBalance = withAutoBalance;
         this.interval = interval;
+        this.autoBalanceScoreThreshold = autoBalanceScoreThreshold;
         root = null;
         size = 0;
         manageAutoBalance();
@@ -61,16 +64,20 @@ public class KDTreeImpl<K extends KDTreeKey, V> implements KDTree<K, V> {
 
 
     @Override
-    public void delete(K key) {
+    public boolean delete(K key) {
         if (root == null) {
             throw new KDTreeRuntimeException(KDTreeExceptionType.KEY_NOT_EXISTS, "cannot delete node");
         }
         Runnable unlock = autoBalanceLock();
 
-        root = deleteNodeRec(root, key, null);
-        size--;
+        AtomicBoolean isDeleted = new AtomicBoolean(false);
+        root = deleteNodeRec(root, key, null, isDeleted);
+        if (isDeleted.get()) {
+            size--;
+        }
 
         unlock.run();
+        return isDeleted.get();
     }
 
     @Override
@@ -118,6 +125,10 @@ public class KDTreeImpl<K extends KDTreeKey, V> implements KDTree<K, V> {
 
     @Override
     public void balance() {
+        if (withAutoBalance && score() >= autoBalanceScoreThreshold) {
+            return;
+        }
+
         Runnable unlock = autoBalanceLock();
 
         List<Map.Entry<K, V>> nodes = query().execute();
@@ -279,25 +290,26 @@ public class KDTreeImpl<K extends KDTreeKey, V> implements KDTree<K, V> {
         }
     }
 
-    private KDTreeNode<K, V> deleteNodeRec(KDTreeNode<K, V> node, K nodeToDelete, KDTreeNode<K, V> parent) {
+    private KDTreeNode<K, V> deleteNodeRec(KDTreeNode<K, V> node, K nodeToDelete, KDTreeNode<K, V> parent, AtomicBoolean isDeleted) {
         if (node == null) {
             return null;
         }
 
         int axis = node.getAxis();
         if (node.getKey().equals(nodeToDelete)) {
+            isDeleted.set(true);
 
             if (node.getRight() != null) {
                 KDTreeNode<K, V> minR = findMinRec(node.getRight(), axis);
                 node.setKey(minR.getKey());
                 node.setValue(minR.getValue());
-                node.setRight(deleteNodeRec(node.getRight(), minR.getKey(), node));
+                node.setRight(deleteNodeRec(node.getRight(), minR.getKey(), node, isDeleted));
 
             } else if (node.getLeft() != null) {
                 KDTreeNode<K, V> minL = findMinRec(node.getLeft(), axis);
                 node.setKey(minL.getKey());
                 node.setValue(minL.getValue());
-                node.setRight(deleteNodeRec(node.getLeft(), minL.getKey(), node));
+                node.setRight(deleteNodeRec(node.getLeft(), minL.getKey(), node, isDeleted));
                 node.setLeft(null);
 
             } else {
@@ -313,9 +325,9 @@ public class KDTreeImpl<K extends KDTreeKey, V> implements KDTree<K, V> {
         }
 
         if (compareNodeFeature(nodeToDelete, node.getKey(), axis) < 0) {
-            node.setLeft(deleteNodeRec(node.getLeft(), nodeToDelete, node));
+            node.setLeft(deleteNodeRec(node.getLeft(), nodeToDelete, node, isDeleted));
         } else {
-            node.setRight(deleteNodeRec(node.getRight(), nodeToDelete, node));
+            node.setRight(deleteNodeRec(node.getRight(), nodeToDelete, node, isDeleted));
         }
 
         return node;
