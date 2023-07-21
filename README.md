@@ -185,7 +185,7 @@ Results:
 
 From the results it is evident that it is necessary to pay computational time to build the structure, but subsequently the queries will be much faster.
 
-You can find the experiment in the file *src/test/java/com/alessandrosestito/KDTreeBenchmarkTests.java*
+You can find the experiment in the file [*src/test/java/com/alessandrosestito/KDTreeBenchmarkTests.java*](https://github.com/alesest/kdtree/blob/main/src/test/java/com/alessandrosestito/KDTreeBenchmarkTests.java)
 
 ## Use case
 I used this data structure to optimize the performance of the people matching algorithm of a dating app.
