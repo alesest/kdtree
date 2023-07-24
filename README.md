@@ -1,4 +1,4 @@
-# SUPER-FAST LIGHTWEIGHT MULTI-DIMENSION BINARY TREE, to index everything! 🚀
+# Super-Fast Lightweight Multi-Dimension Binary Tree, to index everything! 🚀
 
 Are you looking to optimize the performance of searches on your Java data structures? take a moment to read this guide, it could be for you.
 
