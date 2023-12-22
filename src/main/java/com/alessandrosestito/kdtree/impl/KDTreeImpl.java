@@ -143,12 +143,23 @@ public class KDTreeImpl<K extends KDTreeKey, V> implements KDTree<K, V> {
     @Override
     public double score() {
         Runnable unlock = autoBalanceLock();
-
-        double x = ((double) scoreRec(root)) / size;
-        double p = (2 / (Math.sqrt(size) + 1));
-
+        double score = Math.log(minDept(root)) / Math.log(maxDept(root));
         unlock.run();
-        return (1 - p) * (1 - x) + p;
+        return score;
+    }
+
+    public int maxDept(KDTreeNode<K, V> node) {
+        if (node == null) {
+            return 0;
+        }
+        return 1 + Math.max(maxDept(node.getLeft()), maxDept(node.getRight()));
+    }
+
+    public int minDept(KDTreeNode<K, V> node) {
+        if (node == null) {
+            return 0;
+        }
+        return 1 + Math.min(minDept(node.getLeft()), minDept(node.getRight()));
     }
 
     private Runnable autoBalanceLock() {
@@ -200,28 +211,6 @@ public class KDTreeImpl<K extends KDTreeKey, V> implements KDTree<K, V> {
                 .left(nl)
                 .right(nr)
                 .build();
-    }
-
-    private long scoreRec(KDTreeNode<K, V> node) {
-        if (node.getRight() == null && node.getLeft() == null) {
-            return 0;
-        }
-
-        int score = 0;
-
-        if (node.getLeft() != null) {
-            score += scoreRec(node.getLeft());
-        } else {
-            score++;
-        }
-
-        if (node.getRight() != null) {
-            score += scoreRec(node.getRight());
-        } else {
-            score++;
-        }
-
-        return score;
     }
 
     private void findRec(KDTreeNode<K, V> node, KDTreeQuery<K, V> query, List<Map.Entry<K, V>> results) {

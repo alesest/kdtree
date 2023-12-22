@@ -248,7 +248,7 @@ public class KDTreeTests {
         double lowScore = kd.score();
         kd.balance();
         double highScore = kd.score();
-        System.out.println("balance - low " + lowScore + "high " + highScore);
+        System.out.println("balance - low " + lowScore + " high " + highScore);
         Set<Point3dIndex> r2 = kd.query().featureBounds("x", 100, 200).execute().stream().map(Map.Entry::getKey).collect(Collectors.toSet());
 
         r2.forEach(p -> assertTrue(p.toString(), r1.contains(p)));
@@ -257,10 +257,9 @@ public class KDTreeTests {
 
         System.out.println("score1 " + kdTree.score());
         findTest();
-
-        kdTree.balance();
-
         System.out.println("score2 " + kdTree.score());
+        kdTree.balance();
+        System.out.println("score3 " + kdTree.score());
         findTest();
     }
 

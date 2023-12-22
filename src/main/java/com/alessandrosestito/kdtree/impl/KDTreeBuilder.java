@@ -11,7 +11,7 @@ import java.time.Duration;
 public class KDTreeBuilder<K extends KDTreeKey, V> {
     private final Class<K> keyClass;
     private boolean autoBalance = false;
-    private double autoBalanceScoreThreshold = 0.75;
+    private double autoBalanceScoreThreshold = 0.90;
     private Duration balanceInterval;
 
     public KDTreeBuilder<K, V> withAutoBalance(Duration interval) {
